@@ -369,7 +369,7 @@ public class SshUtil {
 	 * @param privateKey
 	 * @param localFile
 	 * @param remoteFile
-	 * @param progress 上传进度<文件总大小,已上传大小>
+	 * @param progress 上传进度 文件总大小,已上传大小
 	 * @throws RuntimeException
 	 */
 	public static void scpTo(
