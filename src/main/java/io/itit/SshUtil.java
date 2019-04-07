@@ -42,7 +42,7 @@ public class SshUtil {
 	}
 	
 	/**
-	 * 
+	 * 密码登录
 	 * @param host
 	 * @param port
 	 * @param user
@@ -56,6 +56,24 @@ public class SshUtil {
 			String user, 
 			String password) throws Exception {
 			return shell(host, port, user, password, null, DEFAULT_TIMEOUNT);
+	}
+	
+	/**
+	 * 证书登录
+	 * @param privateKey
+	 * @param host
+	 * @param port
+	 * @param user
+	 * @return
+	 * @throws Exception
+	 */
+	public static ChannelShell shell(
+			String privateKey,
+			String host, 
+			int port, 
+			String user
+			) throws Exception {
+			return shell(host, port, user, null, privateKey, DEFAULT_TIMEOUNT);
 	}
 	/**
 	 * 

@@ -46,4 +46,12 @@ SshUtil.setPortForwardingL(user, password, host, port, "127.0.0.1", 3307, remote
 ```java
 SshUtil.setPortForwardingR(user, password, host, port, 22, "localhost", 8022);
 ```
-
+6.新增用户test，并且设置test密码
+```java
+SshChannel channel=startShell();
+channel.send("useradd test\n");
+channel.send("passwd test\n").expect(
+		new String[] {"New password:","Retype new password:"},(input)->{
+	channel.send("123ABCabc#^!\n");
+});
+```

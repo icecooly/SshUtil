@@ -14,10 +14,12 @@ public class SshUtilTestCase extends TestCase{
 	//
 	private static Logger logger=LoggerFactory.getLogger(SshUtilTestCase.class);
 	//
-	private String host="xxxxxx";
+	private String host="xxxx";
 	private int port=22;
-	private String user="xxxx";
-	private String password="xxxxx";
+	private String user="root";
+	private String password=null;
+	private String privateKey=null;//证书私钥
+	private String cmd="pwd\n";//登录后执行的命令
 	//
 	private SshChannel startShell() throws Exception {
 		ConnectionInfo connectionInfo = new ConnectionInfo();
@@ -25,7 +27,8 @@ public class SshUtilTestCase extends TestCase{
 		connectionInfo.port = port;
 		connectionInfo.user = user;
 		connectionInfo.password = password;
-		connectionInfo.cmd="pwd\n";
+		connectionInfo.privateKey=privateKey;
+		connectionInfo.cmd=cmd;
 		connectionInfo.channelListener=new ChannelListener() {
 			@Override
 			public void onTicket(SshChannel channel, long ticket) {
@@ -40,6 +43,11 @@ public class SshUtilTestCase extends TestCase{
 			@Override
 			public void onMessage(SshChannel channel, String message) {
 				logger.info("onMessage channel:{} message:\n{}",channel,message);
+			}
+			
+			@Override
+			public void onError(SshChannel channel, String errorMessage) {
+				logger.info("onError channel:{} errorMessage:\n{}",channel,errorMessage);
 			}
 			
 			@Override
@@ -58,20 +66,42 @@ public class SshUtilTestCase extends TestCase{
 			}
 		};
 		SshChannel sshChannel = new SshChannel();
-		sshChannel.connectionInfo = connectionInfo;
+		sshChannel.setConnectionInfo(connectionInfo);
 		sshChannel.startShell();
 		return sshChannel;
 	}
 	
 	//
-	public void testLogin() throws Exception {
+	public void testLoginWithPassword() throws Exception {
+		password="xxxxxx";
+		startShell();
+		Thread.sleep(2000);
+	}
+	//
+	public void testLoginWithPrivateKey() throws Exception {
+		privateKey="-----BEGIN RSA PRIVATE KEY-----\n" + 
+				"MIICXAIBAAKBgQCCGV2G5ccTSVqAg5crpSpHRFLTW7GKwz6y+/9dBr9hipCi8t65\n" + 
+				"ZNpVqx6nu/Gjnvk0KZNTyujaSinwLQtDh2B69+Y816m5iUFU42BU7hgyl+o9BQw9\n" + 
+				"XXXXXXXXXXXXXXXXXX0IY6YnWX5dg6oEoTbNjGaqnMx05TlH9qVj5qfeOwIDAQAB\n" + 
+				"AoGAE5hcdOgA/w+qWPb4+vLqlkddLkZ+TEcyF2VLRiixKLEJLfHkyAm/tO2MNXli\n" + 
+				"YOGd6VRlw1Ypkk9fV7SBIM+wIT5Luq778GuPhb+gzPuKya+QfjK2WiDjE88sEci4\n" + 
+				"8PkUGBUnXRpxP4e0PZ1+LPOKKGBSYlXeuo59BiU/l9P+3JECQQDA/Fz1z5w+ANVR\n" + 
+				"AxXxxksUdwP8r4JVZnWvGtJWycJ0aKJwoCqS0IF3se1mvHT8/guPDds+cHhHcjgd\n" + 
+				"cy0kBSlTAkEArJRRJVfwO5AipPHwXnz5ycer/scyHsLCXptKwfCqF3IunP5vB0MX\n" + 
+				"ryDfYRA7BjtnwDmyjHgkAInpsQ5ldAKSeQJBAJbiuSvXbqlrrVzxtK6cAwe1JgDi\n" + 
+				"mFx9B3Yo2lvQ06CATsEP+TlgnFkhXCP/JNjJJ/BpPQnMlb4Gp6ke7CRFhNECQGzM\n" + 
+				"RCvquISUZYLfE849s6vFuWSxZ6OE3MyP0h1Z/6EwVrqanJxTa8b4Tlr+xHc1VD8X\n" + 
+				"ILz1sJ05dd4tWUA9ruECQD9lVKt9lfyxZC8dF0lJYkX7avuuFpEkby5SsTXJaoRv\n" + 
+				"b0otvcMp8UpCCNDjkrI2HqyPbgcDDzj3PSYSgqCDjVo=\n" + 
+				"-----END RSA PRIVATE KEY-----\n" + 
+				"";
 		startShell();
 		Thread.sleep(2000);
 	}
 	//
 	public void testLs() throws Exception {
 		SshChannel channel=startShell();
-		channel.sendMessageToServer("ls -lrt\n");
+		channel.send("ls -lrt\n");
 		Thread.sleep(2000);
 	}
 	//
@@ -84,7 +114,7 @@ public class SshUtilTestCase extends TestCase{
 	//
 	public void testMd5() throws Exception {
 		SshChannel channel=startShell();
-		channel.sendMessageToServer("md5sum /tmp/b.txt\n");
+		channel.send("md5sum /tmp/b.txt\n");
 		Thread.sleep(2000);
 	}
 	//
@@ -108,6 +138,29 @@ public class SshUtilTestCase extends TestCase{
 	 */
 	public void testPortForwardingR() throws Exception {
 		SshUtil.setPortForwardingR(user, password, host, port, 22, "localhost", 8022);
+		Thread.sleep(100000);
+	}
+	
+	//高级篇
+	/**
+	 * 新增用户test
+	 * @throws Exception
+	 */
+	public void testAddUser() throws Exception {
+		SshChannel channel=startShell();
+		channel.send("useradd test\n");
+		Thread.sleep(100000);
+	}
+	/**
+	 * 修改用户test的密码
+	 * @throws Exception
+	 */
+	public void testModifyUserPassword() throws Exception {
+		SshChannel channel=startShell();
+		channel.send("passwd test\n").expect(
+				new String[] {"New password:","Retype new password:"},(input)->{
+			channel.send("123ABCabc#^!\n");
+		});
 		Thread.sleep(100000);
 	}
 }

@@ -27,6 +27,13 @@ public interface ChannelListener {
 	 * @param message
 	 */
 	void onMessage(SshChannel channel, String message);
+	
+	/**
+	 * 
+	 * @param channel
+	 * @param message
+	 */
+	void onError(SshChannel channel, String errMessage);
 
 	/**
 	 * 
