@@ -31,7 +31,7 @@ public interface ChannelListener {
 	/**
 	 * 
 	 * @param channel
-	 * @param message
+	 * @param errMessage
 	 */
 	void onError(SshChannel channel, String errMessage);
 
