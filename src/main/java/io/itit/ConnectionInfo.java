@@ -6,16 +6,6 @@ package io.itit;
  *
  */
 public class ConnectionInfo {
-	
-	/**
-	 * 
-	 * @author skydu
-	 *
-	 */
-	public static interface Callback {
-		void onReceiveMessage(String message);
-	}
-
 	//
 	public String name;
 	public String host;
@@ -23,14 +13,13 @@ public class ConnectionInfo {
 	public String user;
 	public String password;
 	public String privateKey;
-	public boolean enableInput;
 	public String cmd;//first cmd
-	public Callback callback;
 	public ChannelListener channelListener;
+	public int connectTimeout=15000;//default 15s
 
 	//
 	@Override
 	public String toString() {
-		return user + "@" + host + ":" + port + "/" + "input:" + enableInput + "/" + channelListener;
+		return user + "@" + host + ":" + port +  "/" + channelListener;
 	}
 }

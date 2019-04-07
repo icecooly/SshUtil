@@ -47,7 +47,7 @@ public class SshChannel {
 	public void startShell() throws Exception {
 		logger.info("startShell connection to {}", connectionInfo.host);
 		shell = SshUtil.shell(connectionInfo.host, connectionInfo.port, connectionInfo.user, connectionInfo.password,
-				connectionInfo.privateKey, 15000);
+				connectionInfo.privateKey, connectionInfo.connectTimeout);
 		shellInputStream = shell.getInputStream();
 		shellOutputStream = shell.getOutputStream();
 		startInputReader();
