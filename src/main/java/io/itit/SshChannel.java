@@ -214,7 +214,6 @@ public class SshChannel {
 	}
 	//
 	protected void matchMessage(String line){
-		logger.info("matchMessage:{}",line);
 		if(line.trim().isEmpty()){
 			return;
 		}
