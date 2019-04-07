@@ -5,7 +5,7 @@
 	<groupId>com.github.icecooly</groupId>
 	<artifactId>SshUtil</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0</version>
+	<version>1.1</version>
 	<name>SshUtil</name>
 	<description>A Java library for ssh</description>
 	<url>https://github.com/icecooly/SshUtil</url>

@@ -15,7 +15,7 @@ Download Jar or grab via Maven:
 <dependency>
   <groupId>com.github.icecooly</groupId>
   <artifactId>SshUtil</artifactId>
-  <version>1.0</version>
+  <version>1.1</version>
 </dependency>
 ```
 
