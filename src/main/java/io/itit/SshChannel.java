@@ -26,9 +26,7 @@ public class SshChannel {
 	//
 	private static Logger logger = LoggerFactory.getLogger(SshChannel.class);
 	//
-	String id;
 	Date createTime;
-	long messageReceivedCount = 0;
 	protected ChannelShell shell;
 	protected OutputStream shellOutputStream;
 	protected InputStream shellInputStream;
