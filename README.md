@@ -56,3 +56,5 @@ channel.send("passwd test\n").expect(
 	channel.send("123ABCabc#^!\n");
 });
 ```
+
+测试1234
